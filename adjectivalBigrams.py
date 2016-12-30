@@ -1,64 +1,56 @@
 import os
 
-class WN:	
+#Example code for parsing the ngram files
 
-	def main(bigram_file): 
-		fileList = []	
-		dictionary = []
-		adj_bi_gram = []
+class WN:
+    def main(bigram_file):
+        dictionary = []
+        adj_bi_gram = []
+        uniqueDictionary = {}
 
-		adjTotal = 0
-		
-		# The adjectives in adj.txt & index.txt are added into fileList
-		# Only the first term of each line is necessary
-		adj_file = open(os.path.expanduser('~/Documents/adj.txt'),'r')
-		af_lines = adj_file.readlines()
-		for phrase in af_lines: 
-			fileList.append(phrase.split()[0])
-		adj_file.close()
+        adjTotal = 0
+        counter = 0
+        uniqueCounter = 0
 
+        dictionary_file = open(os.path.expanduser('~/Documents/dictionary.txt'), 'r')
+        df_lines = dictionary_file.readlines()
+        for phrase in df_lines:
+            dictionary.append(phrase.split()[0])
+        dictionary_file.close()
 
-		index_file = open(os.path.expanduser('~/Documents/index.txt'),'r')
-		if_lines = index_file.readlines()
-		for phrase in if_lines:
-			fileList.append(phrase.split()[0])
-		index_file.close()
-		
+        for bigram in bigram_file:
+            #print (bigram.lower().split()[0] + "   " + bigram.lower().split()[1])
+            if (bigram.lower().split()[0] in dictionary) and (bigram.lower().split()[1] in dictionary):
+                adj_bi_gram.append(bigram)
 
-		
-		#Discard of repeats from fileList and entered into dictionary
-		for i in fileList:
-			if i in dictionary:
-				pass
-			else:
-				dictionary.append(i)
+        for i in adj_bi_gram:
+            print(i)
+            adjTotal += 1
+        print(adjTotal)
 
-		#Determines if both terms in the bigram are adjectives
-		for bigram in bigram_file: 
-			if (bigram.lower().split()[0] in dictionary) and (bigram.lower().split()[1] in dictionary) :
-				adj_bi_gram.append(bigram)
+    # dictionary containing single instances of the adj bigram and the count of times it appeared
+    # the unique bigrams are the keys and the value they unlock is the counter
+        for i in adj_bi_gram:
+            bigram = i.lower().split()[0] + " " + i.lower().split()[1]
+            # print bigram
+            if bigram in uniqueDictionary:
+                pass
+            else:
+                # set the counter back to 0 for each new adj bigram
+                counter = 0
+            counter += 1
+            uniqueDictionary[bigram] = counter
 
+        for i in uniqueDictionary:
+            print(i, ":", uniqueDictionary[i])
+            uniqueCounter += 1
+        print(uniqueCounter)
 
-		print "A list of adjectival bigrams: "
-		for i in adj_bi_gram:
-			print i	
-			adjTotal += 1
-		print "the total of adjectival bigrams in this file is: "
-		print adjTotal
-			
-	if __name__ == '__main__':
-		#Google Files found at http://storage.googleapis.com/books/ngrams/books/datasetsv2.html
+    if __name__ == '__main__':
+	# Example of ngram files from Google
+        zy = open(os.path.expanduser('~/Documents/googlebooks-eng-all-2gram-20120701-zy'), 'r')
+        zz = open(os.path.expanduser('~/Documents/googlebooks-eng-all-2gram-20120701-zz'), 'r')
+        hx = open(os.path.expanduser('~/Documents/googlebooks-eng-all-2gram-20120701-hx'), 'r')
+        aj = open(os.path.expanduser('~/Documents/googlebooks-eng-all-2gram-20120701-aj'), 'r')
 
-		#a_ = open(os.path.expanduser('~/Documents/googlebooks_bigrams_a_'),'r')
-		#aa = open(os.path.expanduser('~/Documents/googlebooks_bigrams_aa'),'r')
-		cc = open(os.path.expanduser('~/Documents/googlebooks_bigrams_cc'),'r')
-		#zi = open(os.path.expanduser('~/Documents/googlebooks_bigrams_zi'),'r')
-		#main(a_)
-		#main(aa)
-		main(cc)
-		#main(zi)
-		
-		
-
- 	
-
+        main(zy)
